@@ -16,6 +16,7 @@ HidePointer()
 Global mseX = 0
 Global mseY = 0
 
+Global prevState = 1
 Global state = 1
 
 Global running = 1

@@ -226,6 +226,9 @@ Function resetLevel()
 	setupDefaultTiles()
 	setupDefaultObjects()
 	
+	cameraX = 0
+	cameraY = 0
+	
 End Function
 
 Function setupDefaultTiles()

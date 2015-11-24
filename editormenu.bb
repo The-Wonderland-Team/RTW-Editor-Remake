@@ -1,6 +1,20 @@
 Global selectedMenu = -1
 
 Function processInputMenu()
+	If didConfirmResponse() Then
+		If didConfirm() Then
+			Select selectedMenu
+				Case 2
+					openManual()
+				Case 3
+					quitEditor()
+				Case 4
+					returnToGame()
+			End Select
+		EndIf
+		selectedMenu = -1
+	EndIf
+	
 	If MouseY() > 200 And MouseY() < 360 Then
 		i = MouseY() - 200
 		
@@ -25,20 +39,32 @@ Function selectMenu(id)
 			loadLevelList()
 			Delay(100)
 		Case 2
-			selectedMenu = -1
-			ExecFile("http://www.midnightsynergy.com/returntowonderland/editormanual")
+			confirm("CONNECT TO INTERNET FOR ONLINE MANUAL?")
 			Delay(100)
-			running = False
 		Case 3
-			selectedMenu = -1
+			confirm("EXIT TO WINDOWS?")
 			Delay(100)
-			running = False
 		Case 4
-			selectedMenu = -1
-			ExecFile("wdlgamep.exe")
+			confirm("RETURN TO GAME?")
 			Delay(100)
-			running = False
 	End Select
+End Function
+
+Function openManual()
+	ExecFile("http://www.midnightsynergy.com/returntowonderland/editormanual")
+	Delay(100)
+	running = False
+End Function
+
+Function quitEditor()
+	Delay(100)
+	running = False
+End Function
+
+Function returnToGame()
+	ExecFile("wdlgamep.exe")
+	Delay(100)
+	running = False
 End Function
 
 Function renderMenu()

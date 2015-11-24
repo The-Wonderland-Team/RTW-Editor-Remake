@@ -29,6 +29,8 @@ Global objectsPanel = LoadAnimImage("graphicseditor/objectsv5b.bmp", 16, 16, 0, 
 setupDefaultTiles()
 setupDefaultObjects()
 
+Global closeClicked = False
+
 Global tileHighlight = 0
 Global objectHighlight = 0
 
@@ -55,6 +57,16 @@ Local limit = 0
 Local tilesNew
 Local objectsNew
 
+If didConfirmResponse() Then
+	If didConfirm() Then
+		If closeClicked Then
+			doEditorClose()
+		EndIf
+		closeClicked = False
+	EndIf
+	selectedMenu = -1
+EndIf
+	
 If MouseDown(1) Then
 	If selectObjects Then
 		setMouseObject(MouseX(), MouseY(), selectedID)
@@ -1217,8 +1229,14 @@ Function getSelectedObjectY()
 End Function
 
 Function handleCloseClick()
+	closeClicked = True
+	confirm("EXIT EDITOR  (did you remember to save)?")
+End Function
+
+Function doEditorClose()
 	resetLevel()
 	state = 1
+	Delay(100)
 End Function
 
 Function handleLoadClick()
