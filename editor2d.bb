@@ -166,6 +166,7 @@ If MouseHit(1) Then
 	If MouseX() > 544 And MouseX() < 576 And MouseY() > 192 And MouseY() < 224 Then
 		currentTileCategory = currentTileCategory - 1
 		selectedID = 0
+		selectObjects = False
 		
 		If currentTileCategory < 0 Then
 			currentTileCategory = numTileCategories - 1
@@ -175,6 +176,7 @@ If MouseHit(1) Then
 	If MouseX() > 760 And MouseX() < 792 And MouseY() > 192 And MouseY() < 224 Then
 		currentTileCategory = currentTileCategory + 1
 		selectedID = 0
+		selectObjects = False
 		
 		If currentTileCategory >= numTileCategories Then
 			currentTileCategory = 0
@@ -223,6 +225,9 @@ If MouseHit(1) Then
 		EndIf
 	EndIf
 	
+	;ref:resize
+	
+	;left+
 	If MouseX() >= 565 And MouseX() < 597 And MouseY() >= 44 And MouseY() < 76 And width < 99 Then
 		tilesNew = CreateBank((width+1)*height*4)
 		objectsNew = CreateBank((width+1)*height*4)
@@ -254,6 +259,7 @@ If MouseHit(1) Then
 		width=width+1
 	EndIf
 	
+	;right+
 	If MouseX() >= 629 And MouseX() < 661 And MouseY() >= 44 And MouseY() < 76 And width < 99 Then
 		tilesNew = CreateBank((width+1)*height*4)
 		objectsNew = CreateBank((width+1)*height*4)
@@ -285,10 +291,77 @@ If MouseHit(1) Then
 		objects = objectsNew
 		width=width+1
 	EndIf
+	
+	;down+
+	If MouseX() >= 741 And MouseX() < 773 And MouseY() >= 44 And MouseY() < 76 And width < 99 Then
+		tilesNew = CreateBank(width*(height+1)*4)
+		objectsNew = CreateBank(width*(height+1)*4)
+		
+		For x = 0 To width - 1
+			For y = 0 To height
+				If y = height - 1 Then
+					If x > 0 And x < width - 1 Then
+						PokeInt(tilesNew, (x + y * (width)) * 4, 100)
+					Else
+						PokeInt(tilesNew, (x + y * (width)) * 4, 200)
+					EndIf
+				ElseIf y = height Then
+					PokeInt(tilesNew, (x + y * (width)) * 4, 200)
+				Else
+					PokeInt(tilesNew, (x + y * (width)) * 4, PeekInt(tiles, (x + y * (width)) * 4))
+				EndIf
+			Next
+		Next
+		
+		For x = 0 To width - 1
+			For y = 0 To height - 1
+				PokeInt(objectsNew, (x + y * (width)) * 4, PeekInt(objects, (x + y * (width)) * 4))
+			Next
+		Next
+		FreeBank(tiles)
+		tiles = tilesNew
+		FreeBank(objects)
+		objects = objectsNew
+		height=height+1
+	EndIf
+	
+	;up+
+	If MouseX() >= 677 And MouseX() < 709 And MouseY() >= 44 And MouseY() < 76 And width < 99 Then
+		tilesNew = CreateBank(width*(height+1)*4)
+		objectsNew = CreateBank(width*(height+1)*4)
+		
+		For x = 0 To width - 1
+			For y = 0 To height - 1
+				PokeInt(tilesNew, (x + (y + 1) * (width)) * 4, PeekInt(tiles, (x + y * (width)) * 4))
+				If y = 1 Then
+					If x > 0 And x < width - 1 Then
+						PokeInt(tilesNew, (x + y * (width)) * 4, 100)
+					Else
+						PokeInt(tilesNew, (x + y * (width)) * 4, 200)
+					EndIf
+				ElseIf y = 0 Then
+					PokeInt(tilesNew, (x + y * (width)) * 4, 200)
+				EndIf
+			Next
+		Next
+		
+		For x = 0 To width - 1
+			For y = 0 To height - 1
+				PokeInt(objectsNew, (x + (y + 1) * (width)) * 4, PeekInt(objects, (x + y * (width)) * 4))
+			Next
+		Next
+		FreeBank(tiles)
+		tiles = tilesNew
+		FreeBank(objects)
+		objects = objectsNew
+		height=height+1
+	EndIf
+
 
 EndIf
 
 If MouseHit(2) Then
+	;left-
 	If MouseX() >= 565 And MouseX() < 597 And MouseY() >= 44 And MouseY() < 76 And width > 14 Then
 		tilesNew = CreateBank((width-1)*height*4)
 		objectsNew = CreateBank((width-1)*height*4)
@@ -296,13 +369,14 @@ If MouseHit(2) Then
 		For x = 0 To width - 1
 			For y = 0 To height - 1
 				PokeInt(tilesNew, (x - 1 + y * (width-1)) * 4, PeekInt(tiles, (x + y * (width)) * 4))
-				If x = 0 Then
-					If y > 0 And y < height - 1 Then
-						PokeInt(tilesNew, (x - 1 + y * (width-1)) * 4, 100)
-					Else
-						PokeInt(tilesNew, (x - 1 + y * (width-1)) * 4, 200)
-					EndIf
-				ElseIf x = 1 Then
+				;If x = 0 Then
+				;	If y > 0 And y < height - 1 Then
+				;		PokeInt(tilesNew, (x - 1 + y * (width-1)) * 4, 100)
+				;	Else
+				;		PokeInt(tilesNew, (x - 1 + y * (width-1)) * 4, 200)
+				;	EndIf
+				;Else
+				If x = 1 Then
 					PokeInt(tilesNew, (x - 1 + y * (width-1)) * 4, 200)
 				EndIf
 			Next
@@ -324,19 +398,21 @@ If MouseHit(2) Then
 		EndIf
 	EndIf
 
+	;right-
 	If MouseX() >= 629 And MouseX() < 661 And MouseY() >= 44 And MouseY() < 76 And width > 14 Then
 		tilesNew = CreateBank((width-1)*height*4)
 		objectsNew = CreateBank((width-1)*height*4)
 		
 		For x = 0 To width - 1
 			For y = 0 To height - 1
-				If x = width - 2 Then
-					If y > 0 And y < height - 1 Then
-						PokeInt(tilesNew, (x + y * (width-1)) * 4, 100)
-					Else
-						PokeInt(tilesNew, (x + y * (width-1)) * 4, 200)
-					EndIf
-				ElseIf x = width - 1 Then
+				;If x = width - 2 Then
+				;	If y > 0 And y < height - 1 Then
+				;		PokeInt(tilesNew, (x + y * (width-1)) * 4, 100)
+				;	Else
+				;		PokeInt(tilesNew, (x + y * (width-1)) * 4, 200)
+				;	EndIf
+				;Else
+				If x = width - 1 Then
 					PokeInt(tilesNew, (x - 1 + y * (width-1)) * 4, 200)
 				Else
 					PokeInt(tilesNew, (x + y * (width-1)) * 4, PeekInt(tiles, (x + y * (width)) * 4))
@@ -357,6 +433,82 @@ If MouseHit(2) Then
 		
 		If cameraX + 13 > width - 1 Then
 			cameraX = width - 14
+		EndIf
+	EndIf
+	
+	;down-
+	;If MouseX() >= 677 And MouseX() < 709 And MouseY() >= 44 And MouseY() < 76 And width > 14 Then
+	If MouseX() >= 741 And MouseX() < 773 And MouseY() >= 44 And MouseY() < 76 And height > 14 Then
+		tilesNew = CreateBank(width*(height-1)*4)
+		objectsNew = CreateBank(width*(height-1)*4)
+		
+		For x = 0 To width - 1
+			For y = 0 To height - 2
+				;If y = height - 2 Then
+				;	If x > 0 And x < width - 1 Then
+				;		PokeInt(tilesNew, (x + y * (width)) * 4, 100)
+				;	Else
+				;		PokeInt(tilesNew, (x + y * (width)) * 4, 200)
+				;	EndIf
+				;Else
+				If y = height - 2 Then
+					PokeInt(tilesNew, (x + y * (width)) * 4, 200)
+				Else
+					PokeInt(tilesNew, (x + y * (width)) * 4, PeekInt(tiles, (x + y * (width)) * 4))
+				EndIf
+			Next
+		Next
+		
+		For x = 0 To width - 1
+			For y = 0 To height - 2
+				PokeInt(objectsNew, (x + y * (width)) * 4, PeekInt(objects, (x + y * (width)) * 4))
+			Next
+		Next
+		FreeBank(tiles)
+		tiles = tilesNew
+		FreeBank(objects)
+		objects = objectsNew
+		height=height-1
+		
+		If cameraY + 13 > height - 1 Then
+			cameraY = height - 14
+		EndIf
+	EndIf
+	
+	;up-
+	If MouseX() >= 677 And MouseX() < 709 And MouseY() >= 44 And MouseY() < 76 And height > 14 Then
+		tilesNew = CreateBank(width*(height-1)*4)
+		objectsNew = CreateBank(width*(height-1)*4)
+		
+		For x = 0 To width - 1
+			For y = 0 To height - 2
+				PokeInt(tilesNew, (x + (y) * (width)) * 4, PeekInt(tiles, (x + (y+1) * (width)) * 4))
+				;If x = 0 Then
+				;	If y > 0 And y < height - 1 Then
+				;		PokeInt(tilesNew, (x - 1 + y * (width-1)) * 4, 100)
+				;	Else
+				;		PokeInt(tilesNew, (x - 1 + y * (width-1)) * 4, 200)
+				;	EndIf
+				;Else
+				If y = 0 Then
+					PokeInt(tilesNew, (x + (y) * (width)) * 4, 200)
+				EndIf
+			Next
+		Next
+		
+		For x = 0 To width - 1
+			For y = 0 To height - 2
+				PokeInt(objectsNew, (x + (y) * (width)) * 4, PeekInt(objects, (x + y * (width)) * 4))
+			Next
+		Next
+		FreeBank(tiles)
+		tiles = tilesNew
+		FreeBank(objects)
+		objects = objectsNew
+		height = height - 1
+		
+		If cameraY + 13 > height - 1 Then
+			cameraY = height - 14
 		EndIf
 	EndIf
 EndIf
@@ -409,6 +561,7 @@ Function render()
 End Function
 
 Function renderInfoPanel()
+	;ref:info
 	renderTextCenter(levelTitle, 670, 12)
 	
 	DrawImage(arrows, 565, 44, 3)
@@ -1366,4 +1519,3 @@ End Function
 Function getSelectedTileY()
 	Return selectedID / 7
 End Function
-
