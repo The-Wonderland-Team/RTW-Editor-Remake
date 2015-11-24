@@ -225,6 +225,30 @@ If MouseHit(1) Then
 		EndIf
 	EndIf
 	
+	If MouseX() > 544 And MouseX() < 791 And MouseY() > 124 And MouseY() < 156 Then
+		
+		levelTexture=levelTexture+1
+		
+		If levelTexture > 9 Then
+			levelTexture = 0
+		ElseIf levelTexture < 0 Then
+			levelTexture = 9
+		EndIf
+		
+	EndIf
+	
+	If MouseX() > 544 And MouseX() < 791 And MouseY() > 156 And MouseY() < 188 Then
+		
+		levelBackground=levelBackground+1
+		
+		If levelBackground > 10 Then
+			levelBackground = 0
+		ElseIf levelBackground < 0 Then
+			levelBackground = 10
+		EndIf
+		
+	EndIf
+	
 	;ref:resize
 	
 	;left+
