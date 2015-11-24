@@ -1,4 +1,4 @@
-Global levelName$ = "level"
+Global levelName$ = ""
 Global timer = 300
 Global levelTitle$ = "Untitled Level"
 Global customHouse$ = ""
@@ -196,4 +196,92 @@ Function saveLevel(path$)
 	CloseFile(file)
 	
 	Return True
+End Function
+
+Function resetLevel()
+	
+	levelName = ""
+	timer = 300
+	levelTitle = "Untitled Level"
+	customHouse = ""
+	customModel = ""
+	customTexture = ""
+	customBackground = ""
+	levelTexture = 2
+	levelBackground = 0
+	width = 14
+	height = 14
+	
+	FreeBank(tiles)
+	tiles = CreateBank(14 * 14 * 4)
+	FreeBank(objects)
+	objects = CreateBank(14 * 14 * 4)
+	
+	For i = 0 To 19	
+		signText[i] = ""
+	Next
+	
+	levelMusic = 1
+	
+	setupDefaultTiles()
+	setupDefaultObjects()
+	
+End Function
+
+Function setupDefaultTiles()
+	For x = 0 To 13
+		For y = 0 To 13
+			setTile(x, y, 1, 0)
+		Next
+	Next
+	
+	For x = 0 To 13
+		For y = 0 To 13
+			If x = 0 Or y = 0 Or x = 13 Or y = 13 Then
+				setTile(x, y, 2, 0)
+			EndIf
+		Next
+	Next
+End Function
+
+Function setupDefaultObjects()
+	For x = 0 To 13
+		For y = 0 To 13
+			setObject(x, y, 0)
+		Next
+	Next
+End Function
+
+Function setTile(x, y, cat, id)
+	
+	If x >= 0 And x <= width And y >= 0 And y <= height Then
+		;tiles[x + y * 14] = cat * 100 + id
+		PokeInt(tiles, (x + y * width) * 4, cat * 100 + id)
+	EndIf
+	
+End Function
+
+Function setObject(x, y, id)
+	If x >= 0 And x <= width And y >= 0 And y <= height Then
+		;objects[x + y * 14] = id
+		PokeInt(objects, (x + y * width) * 4, id)
+	EndIf
+	
+End Function
+
+Function getTile(x, y)
+	If x >= 0 And x <= width And y >= 0 And y <= height Then
+		;Return tiles[x + y * 14]
+	
+		Return PeekInt(tiles, (x + y * width) * 4)
+	EndIf
+	
+End Function
+
+Function getObject(x, y)
+	If x >= 0 And x <= width And y >= 0 And y <= height Then
+		;Return objects[x + y * 14]
+		Return PeekInt(objects, (x + y * width) * 4)
+	EndIf
+	
 End Function
