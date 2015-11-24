@@ -144,6 +144,20 @@ If MouseX() > 48 And MouseX() < 496 And MouseY() > 48 And MouseY() < 496 Then
 EndIf
 
 If MouseHit(1) Then
+	
+	;ref:timer
+	If MouseX() > 544 And MouseX() < 576 And MouseY() > 88 And MouseY() < 120 Then
+		If timer > 10 Then
+			timer = timer - 10
+		EndIf
+	EndIf
+	
+	If MouseX() > 760 And MouseX() < 792 And MouseY() > 88 And MouseY() < 120 Then
+		If timer < 900 Then
+			timer = timer + 10
+		EndIf
+	EndIf
+
 	If MouseX() > 544 And MouseX() < 792 And MouseY() > 502 And MouseY() < 530 Then
 		levelMusic = levelMusic + 1
 		If levelMusic > 6 Then
@@ -604,7 +618,11 @@ Function renderInfoPanel()
 End Function
 
 Function renderStylePanel()
-	DrawImage(arrows, 544, 88, 3)
+	If timer > 10 Then
+		DrawImage(arrows, 544, 88, 3)
+	Else
+		DrawImage(arrows, 544, 88, 7)
+	EndIf
 	
 	renderTextCenter("Time: " + timer, 670, 92)
 	
