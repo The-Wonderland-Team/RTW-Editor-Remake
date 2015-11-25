@@ -13,6 +13,7 @@ Function processInputMenu()
 			End Select
 		EndIf
 		selectedMenu = -1
+		resetConfirmResponse()
 	EndIf
 	
 	If MouseY() > 200 And MouseY() < 360 Then
@@ -39,12 +40,15 @@ Function selectMenu(id)
 			loadLevelList()
 			Delay(100)
 		Case 2
+			renderState = 2
 			confirm("CONNECT TO INTERNET FOR ONLINE MANUAL?")
 			Delay(100)
 		Case 3
+			renderState = 2
 			confirm("EXIT TO WINDOWS?")
 			Delay(100)
 		Case 4
+			renderState = 2
 			confirm("RETURN TO GAME?")
 			Delay(100)
 	End Select

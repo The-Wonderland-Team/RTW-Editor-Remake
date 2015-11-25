@@ -2,7 +2,12 @@ Global levelList$[1000000]
 Global levelListTitle$[1000000]
 Global levelCount = 0
 
+Global loadOffset = 0
+
 Function processInputLoad()
+
+	;If loadOffset + 10 > levelCount Then loadOffset = levelCount - 10
+	;If loadOffset < 0 Then loadOffset = 0
 	
 	If MouseHit(1) Then
 		If MouseX() > 672 And MouseY() < 32 Then
@@ -11,13 +16,25 @@ Function processInputLoad()
 		
 		If MouseY() > 64 And MouseY() < 544 Then
 			i = MouseY() - 64
-			index = i / 32
+			index = (i / 32) + loadOffset
 			
 			file$ = levelList[index]
 			
 			loadLevel("CustomLevels/" + file)
 			state = 0
 			Delay(100)
+		EndIf
+		
+		If MouseY() > 32 And MouseY() < 64 Then
+			If loadOffset > 0 Then
+				loadOffset = loadOffset - 1
+			EndIf
+		EndIf
+		
+		If MouseY() > 544 And MouseY() < 576 Then
+			If loadOffset + 15 < levelCount Then
+				loadOffset = loadOffset + 1
+			EndIf
 		EndIf
 	EndIf
 	
@@ -28,24 +45,40 @@ Function renderLoad()
 	
 	renderText("[CANCEL]", 672, 0)
 	
-	For i = 0 To 25
-		DrawImage(arrows, i*32, 32, 4)
-	Next
+	If loadOffset > 0 Then
+		For i = 0 To 25
+			DrawImage(arrows, i*32, 32, 0)
+		Next
+	Else
+		For i = 0 To 25
+			DrawImage(arrows, i*32, 32, 4)
+		Next
+	EndIf
 	
-	For i = 0 To levelCount - 1
+	renderCount = levelCount - 1
+	
+	If renderCount > 14 Then renderCount = 14
+	
+	For i = loadOffset To renderCount + loadOffset
 		file$ = levelList[i]
 		offset = Len(file) - 4
 		name$ = Upper(Left(file, offset))
-		renderText(name, 0, i*32+64)
+		renderText(name, 0, (i-loadOffset)*32+64)
 	Next
 	
-	For i = 0 To levelCount
-		renderText(levelListTitle[i], 240, i*32+64)
+	For i = loadOffset To renderCount + loadOffset
+		renderText(levelListTitle[i], 240, (i-loadOffset)*32+64)
 	Next
 	
-	For i = 0 To 25
-		DrawImage(arrows, i*32, 544, 6)
-	Next
+	If loadOffset + 15 < levelCount Then
+		For i = 0 To 25
+			DrawImage(arrows, i*32, 544, 2)
+		Next
+	Else
+		For i = 0 To 25
+			DrawImage(arrows, i*32, 544, 6)
+		Next
+	EndIf
 End Function
 
 Function renderDebugLoad()
@@ -79,6 +112,8 @@ Function loadLevelList()
 	CloseDir(levelsDir)
 	
 	levelCount = i
+	
+	loadOffset = 0
 	
 End Function
 

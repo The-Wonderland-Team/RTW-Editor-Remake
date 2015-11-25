@@ -21,15 +21,19 @@ End Function
 Function selectConfirm(id)
 	Select id
 		Case 0
+			useRenderState = True
 			selectedConfirm = -1
 			state = prevState
 			confirmed = True
 			Delay(100)
+			;useRenderState = False
 		Case 1
+			useRenderState = False
 			selectedConfirm = -1
 			state = prevState
 			confirmed = False
 			Delay(100)
+			;useRenderState = False
 	End Select
 	didConfirmRes = True
 End Function
@@ -79,6 +83,10 @@ End Function
 
 Function didConfirmResponse()
 	Return didConfirmRes
+End Function
+
+Function resetConfirmResponse()
+	didConfirmRes = False
 End Function
 
 Function didConfirm()

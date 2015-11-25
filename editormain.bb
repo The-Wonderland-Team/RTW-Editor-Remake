@@ -90,6 +90,10 @@ EndIf
 
 If MouseHit(1) Then
 	
+	If MouseX() > 544 And MouseX() < 791 And MouseY() > 12 And MouseY() < 44 Then
+		renameLevel()
+	EndIf
+	
 	;ref:timer
 	If MouseX() > 544 And MouseX() < 576 And MouseY() > 88 And MouseY() < 120 Then
 		If timer > 10 Then
@@ -659,6 +663,8 @@ Function renderDebugMain()
 	;renderText("Size: (" + width + ", " + height + ")", 0, 192)
 	
 	Text(0, 128, "Textures: (" + levelTexture + ", " + backgroundTexture + ")") ; 224
+	
+	Text(0, 160, "Level ID: " + Str(levelID))
 End Function
 
 Function renderArrows()
@@ -1229,14 +1235,17 @@ Function getSelectedObjectY()
 End Function
 
 Function handleCloseClick()
+	renderState = 1
 	closeClicked = True
 	confirm("EXIT EDITOR  (did you remember to save)?")
 End Function
 
 Function doEditorClose()
+	resetConfirmResponse()
 	resetLevel()
 	state = 1
 	Delay(100)
+	useRenderState = False
 End Function
 
 Function handleLoadClick()
@@ -1248,6 +1257,11 @@ End Function
 Function handleSaveClick()
 	;Save Level
 	;saveLevel("CustomLevels/sample.lv6")
+	
+	nameEdit = levelName
+	
+	textID = 1
+	
 	state = 4
 End Function
 
@@ -1472,3 +1486,12 @@ Function getSelectedTileY()
 	Return selectedID / 7
 End Function
 
+Function renameLevel()
+
+	nameEdit = levelTitle
+	
+	textID = 0
+	
+	state = 4
+	
+End Function

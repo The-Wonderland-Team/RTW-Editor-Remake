@@ -9,6 +9,7 @@ Global levelTexture = 2
 Global levelBackground = 0
 Global width = 14
 Global height = 14
+Global levelID = Rnd(100000000, 999999999)
 
 Global tiles = CreateBank(14 * 14 * 4)
 Global objects = CreateBank(14 * 14 * 4)
@@ -32,21 +33,16 @@ Function loadLevel(path$)
 	
 	levelName = ReadString(file)
 	
+	levelID = ReadInt(file)
 	
+	levelTitle = ReadString(file)
 	
 	If header = "Stinky & Loof Level File v3" Then
-		Local unknown# = ReadFloat(file)
-	
-		levelTitle = ReadString(file)
 	
 		timer = ReadInt(file)
 	ElseIf header = "Stinky & Loof Level File v5" Then
 		
 		signCount = 20
-			
-		dummy = ReadInt(file)
-			
-		levelTitle = ReadString(file)
 	
 		dummy = ReadInt(file)
 		
@@ -60,10 +56,6 @@ Function loadLevel(path$)
 		
 	ElseIf header = "Stinky & Loof Level File v6" Then
 		signCount = 20
-		
-		dummy = ReadInt(file)
-		
-		levelTitle = ReadString(file)
 	
 		dummy = ReadInt(file)
 		
@@ -139,7 +131,7 @@ Function saveLevel(path$)
 	
 	WriteString(file, levelName)
 	
-	WriteInt(file, 0)
+	WriteInt(file, levelID)
 	
 	WriteString(file, levelTitle)
 	
@@ -211,6 +203,7 @@ Function resetLevel()
 	levelBackground = 0
 	width = 14
 	height = 14
+	levelID = Rnd(100000000, 999999999)
 	
 	FreeBank(tiles)
 	tiles = CreateBank(14 * 14 * 4)
