@@ -542,7 +542,11 @@ End Function
 
 Function renderInfoPanel()
 	;ref:info
-	renderTextCenter(levelTitle, 670, 12)
+	If Len(levelTitle) > 15 Then
+		renderTextCenter(Left(levelTitle, 12) + "...", 670, 12)
+	Else
+		renderTextCenter(levelTitle, 670, 12)
+	EndIf
 	
 	DrawImage(arrows, 565, 44, 3)
 	
@@ -1261,6 +1265,9 @@ Function handleSaveClick()
 	nameEdit = levelName
 	
 	textID = 1
+		
+	cursorX = 0
+	cursorY = 0
 	
 	state = 4
 End Function
@@ -1491,6 +1498,9 @@ Function renameLevel()
 	nameEdit = levelTitle
 	
 	textID = 0
+	
+	cursorX = 0
+	cursorY = 0
 	
 	state = 4
 	

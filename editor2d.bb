@@ -22,6 +22,7 @@ Global prevState = 1
 Global state = 1
 Global renderState = 0
 Global useRenderState = False
+Global key
 
 Global running = 1
 
@@ -42,6 +43,8 @@ Wend
 End
 
 Function processInput()
+	
+	key = GetKey()
 	
 	;If KeyHit(1) Then
 	;	running = 0
