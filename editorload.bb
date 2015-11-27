@@ -4,6 +4,10 @@ Global levelCount = 0
 
 Global loadOffset = 0
 
+Function initLoad()
+
+End Function
+
 Function processInputLoad()
 
 	;If loadOffset + 10 > levelCount Then loadOffset = levelCount - 10
@@ -11,7 +15,7 @@ Function processInputLoad()
 	
 	If MouseHit(1) Then
 		If MouseX() > 672 And MouseY() < 32 Then
-			state = 0
+			changeState(0)
 		EndIf
 		
 		If MouseY() > 64 And MouseY() < 544 Then
@@ -21,20 +25,24 @@ Function processInputLoad()
 			file$ = levelList[index]
 			
 			loadLevel("CustomLevels/" + file)
-			state = 0
+			changeState(0)
 			Delay(100)
 		EndIf
-		
+	EndIf
+	
+	If MouseDown(1) Then
 		If MouseY() > 32 And MouseY() < 64 Then
 			If loadOffset > 0 Then
 				loadOffset = loadOffset - 1
 			EndIf
+			Delay(100)
 		EndIf
 		
 		If MouseY() > 544 And MouseY() < 576 Then
 			If loadOffset + 15 < levelCount Then
 				loadOffset = loadOffset + 1
 			EndIf
+			Delay(100)
 		EndIf
 	EndIf
 	
@@ -86,7 +94,7 @@ Function renderDebugLoad()
 End Function
 
 Function loadLevelList()
-	state = 3
+	changeState(3)
 	
 	Local numLevels
 	Local i = 0

@@ -1,5 +1,9 @@
 Global selectedMenu = -1
 
+Function initMenu()
+
+End Function
+
 Function processInputMenu()
 	If didConfirmResponse() Then
 		If didConfirm() Then
@@ -33,7 +37,7 @@ Function selectMenu(id)
 	Select id
 		Case 0
 			selectedMenu = -1
-			state = 0
+			changeState(0)
 			Delay(100)
 		Case 1
 			selectedMenu = -1

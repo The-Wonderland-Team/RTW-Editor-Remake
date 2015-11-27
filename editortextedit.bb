@@ -3,11 +3,73 @@ Global nameEdit$ = ""
 Global cursorX = 0
 Global cursorY = 0
 Global textID = 0
+Global editSignId = 0
+
+Global lineCount = 1
+Global textLines$[4]
+
+Function initTextEdit()
+	For i = 0 To 3
+		textLines[i] = ""
+	Next
+	updateText()
+End Function
+
+Function updateText()
+	loc = 1
+	lastLin$ = nameEdit
+	;i = 0
+	;While Not loc = 0
+	
+	;Cls
+	;renderText("nameEdit: " + nameEdit, 0, 0)
+	;renderText("Press any key to continue...", 0, 32)
+	;Flip
+	;WaitKey
+	
+	;debugWrite(lineCount - 1)
+	
+	For i = 0 To lineCount - 1
+		
+		;If Not i = 0 Then
+			
+			
+			
+		;EndIf
+		
+		If loc = 0 Then Exit
+	
+		loc = Instr(lastLin, "#")
+		
+		If loc = 0 Then
+			;renderText(lastLin, 0, i*32+35)
+			textLines[i] = lastLin
+			;debugWrite(lastLin)
+		Else
+			lin1$ = Left(lastLin, loc-1)
+			lin2$ = Mid(lastLin, loc+1)
+			
+			lastLin = lin2
+			
+			;debugWrite(lin2, 0)
+			
+			;renderText(lin1, 0, 35)
+			;renderText(lin2, 0, 67)
+			
+			;renderText(lin1, 0, i*32+35)
+			textLines[i] = lin1
+			;debugWrite(lin1)
+		EndIf
+		;i=i+1
+		;debugwrite(i, 0)
+	;Wend
+	Next
+End Function
 
 Function processInputTextEdit()
 	
 	;If KeyHit(1) Then
-	;	state = 0
+	;	changeState(0)
 	;	Select textID
 	;		Case 0
 	;			levelTitle = nameEdit
@@ -15,7 +77,7 @@ Function processInputTextEdit()
 	;EndIf
 	
 	If KeyHit(1) Or KeyHit(28) Then
-		state = 0
+		changeState(0)
 		Select textID
 			Case 0
 				levelTitle = nameEdit
@@ -24,6 +86,8 @@ Function processInputTextEdit()
 				If Len(levelName) > 0 Then
 					saveLevel("CustomLevels/" + levelName + ".LV6")
 				EndIf
+			Case 2
+				signText[editSignId] = nameEdit
 		End Select
 	EndIf
 	
@@ -49,56 +113,85 @@ Function processInputTextEdit()
 	Local offset
 	Local r$
 	
-	If cursorY = 0 Then
+	;If cursorY = 0 Then
 	
-		If KeyDown(14) And cursorX > 0 And cursorX <= Len(nameEdit) Then
-			l$ = Left(nameEdit, cursorX - 1)
-			offset = Len(nameEdit) - Len(l)
-			r$ = Right(nameEdit, offset - 1)
+		If KeyDown(14) And cursorX > 0 And cursorX <= Len(textLines[cursorY]) Then
+			l$ = Left(textLines[cursorY], cursorX - 1)
+			offset = Len(textLines[cursorY]) - Len(l)
+			r$ = Right(textLines[cursorY], offset - 1)
 			
-			nameEdit = l + r
+			textLines[cursorY] = l + r
+			nameEdit = textLines[0]
+			For i = 1 To lineCount - 1
+				nameEdit = nameEdit + "#" + textLines[i]
+			Next
+			
+			If Right(nameEdit, 1) = "#" Then
+				nameEdit = Left(nameEdit, Len(nameEdit) - 1)
+			EndIf
 			
 			cursorX = cursorX - 1
 			
-			Delay(50)
-	
-		EndIf
-		
-		If KeyDown(211) And cursorX < Len(nameEdit) Then
-			l$ = Left(nameEdit, cursorX)
-			offset = Len(nameEdit) - Len(l)
-			r$ = Right(nameEdit, offset - 1)
-			
-			nameEdit = l + r
+			updateText()
 			
 			Delay(50)
 	
 		EndIf
 		
-		If key >= 32 And key <= 126 And (Not key = 35) And Len(nameEdit) < 50 Then
-			l$ = Left(nameEdit, cursorX)
-			offset = Len(nameEdit)
-			r$ = Right(nameEdit, offset - Len(l))
+		If KeyDown(211) And cursorX < Len(textLines[cursorY]) Then
+			l$ = Left(textLines[cursorY], cursorX)
+			offset = Len(textLines[cursorY]) - Len(l)
+			r$ = Right(textLines[cursorY], offset - 1)
 			
-			nameEdit = l + Chr(key) + r
+			textLines[cursorY] = l + r
+			nameEdit = textLines[0]
+			For i = 1 To lineCount - 1
+				nameEdit = nameEdit + "#" + textLines[i]
+			Next
+				
+			If Right(nameEdit, 1) = "#" Then
+				nameEdit = Left(nameEdit, Len(nameEdit) - 1)
+			EndIf
+			
+			updateText()
+			
+			Delay(50)
+	
+		EndIf
+		
+		If key >= 32 And key <= 126 And (Not key = 35) And Len(textLines[cursorY]) < 50 Then
+			l$ = Left(textLines[cursorY], cursorX)
+			offset = Len(textLines[cursorY])
+			r$ = Right(textLines[cursorY], offset - Len(l))
+			
+			textLines[cursorY] = l + Chr(key) + r
+			nameEdit = textLines[0]
+			For i = 1 To lineCount - 1
+				nameEdit = nameEdit + "#" + textLines[i]
+			Next
+			
+			If Right(nameEdit, 1) = "#" Then
+				nameEdit = Left(nameEdit, Len(nameEdit) - 1)
+			EndIf
 			
 			If textID = 1 Then
 				nameEdit = Upper(nameEdit)
 			EndIf
 			
 			cursorX = cursorX + 1
+			updateText()
 		EndIf
+
+		If cursorY < 0 Then cursorY = 0
+		If cursorY >= lineCount - 1 Then cursorY = lineCount - 1		
+		If cursorX < 0 Then cursorX = 0
+		If cursorX > Len(textLines[cursorY]) Then cursorX = Len(textLines[cursorY])
 		
-			If cursorX < 0 Then cursorX = 0
-			If cursorX > Len(nameEdit) Then cursorX = Len(nameEdit)
-			If cursorY < 0 Then cursorY = 0
-			If cursorY > 1 Then cursorY = 1
+	;Else
 		
-	Else
+	;	cursorX = 0
 		
-		cursorX = 0
-		
-	EndIf
+	;EndIf
 	
 End Function
 
@@ -140,32 +233,36 @@ Function renderTextEdit()
 	;	renderText(lin2, 0, 67)
 	;EndIf
 	
-	loc = 1
+	;loc = 1
 	
-	i = 0
+	;i = 0
 	
-	lastLin$ = nameEdit
+	;lastLin$ = nameEdit
 	
-	While Not loc = 0
-		
-		loc = Instr(lastLin, "#")
-		
-		If loc = 0 Then
-			renderText(lastLin, 0, i*32+35)
-		Else
-			lin1$ = Left(lastLin, loc-1)
-			lin2$ = Mid(lastLin, loc+1)
-			
-			lastLin = lin2
-			
-			;renderText(lin1, 0, 35)
-			;renderText(lin2, 0, 67)
-			
-			renderText(lin1, 0, i*32+35)
-		EndIf
-		i=i+1
-		
-	Wend
+	;While Not loc = 0
+	;	
+	;	loc = Instr(lastLin, "#")
+	;	
+	;	If loc = 0 Then
+	;		renderText(lastLin, 0, i*32+35)
+	;	Else
+	;		lin1$ = Left(lastLin, loc-1)
+	;		lin2$ = Mid(lastLin, loc+1)
+	;		
+	;		lastLin = lin2
+	;		
+	;		;renderText(lin1, 0, 35)
+	;		;renderText(lin2, 0, 67)
+	;		
+	;		renderText(lin1, 0, i*32+35)
+	;	EndIf
+	;	i=i+1
+	;	
+	;Wend
+	
+	For i = 0 To lineCount - 1
+		renderText(textLines[i], 0, i*32+35)
+	Next
 	
 	;renderText(lastLin, 0, (i*32)+35)
 	

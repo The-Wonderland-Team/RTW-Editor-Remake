@@ -47,6 +47,10 @@ Global cameraY = 0
 Global sx = 0
 Global sy = 0
 
+Function initMain()
+
+End Function
+
 Function processInputMain()
 
 Local mx = 0
@@ -743,7 +747,20 @@ Function setMouseTile(x, y, cat, id)
 		
 		setTile(tX+cameraX, tY+cameraY, cat, id)
 		
+		;sign text
+		If (cat = 13) Then
+			lineCount = 4
+			
+			editSignId = id
+			nameEdit = signText[id]
 		
+			textID = 2
+			
+			cursorX = 0
+			cursorY = 0
+			
+			changeState(4)
+		EndIf
 		
 	EndIf
 	
@@ -1258,7 +1275,7 @@ End Function
 Function doEditorClose()
 	resetConfirmResponse()
 	resetLevel()
-	state = 1
+	changeState(1)
 	Delay(100)
 	useRenderState = False
 End Function
@@ -1273,6 +1290,8 @@ Function handleSaveClick()
 	;Save Level
 	;saveLevel("CustomLevels/sample.lv6")
 	
+	lineCount = 1
+	
 	nameEdit = levelName
 	
 	textID = 1
@@ -1280,7 +1299,7 @@ Function handleSaveClick()
 	cursorX = 0
 	cursorY = 0
 	
-	state = 4
+	changeState(4)
 End Function
 
 Function handleMoveUp()
@@ -1505,14 +1524,22 @@ Function getSelectedTileY()
 End Function
 
 Function renameLevel()
-
+	
+	lineCount = 2
+	
 	nameEdit = levelTitle
+	
+	;Cls
+	;renderText("levelTitle: " + levelTitle, 0, 0)
+	;renderText("Press any key to continue...", 0, 32)
+	;Flip
+	;WaitKey
 	
 	textID = 0
 	
 	cursorX = 0
 	cursorY = 0
 	
-	state = 4
+	changeState(4)
 	
 End Function

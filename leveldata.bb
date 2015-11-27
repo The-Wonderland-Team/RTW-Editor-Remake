@@ -170,14 +170,27 @@ Function saveLevel(path$)
 		Next
 	Next
 	
+	foundPlayer = False
+	
 	i = 0
 	
 	For x = 0 To width - 1
 		For y = 0 To height - 1
-			WriteInt(file, PeekInt(objects, i*4))
+			theObj = PeekInt(objects, i*4)
+			WriteInt(file, theObj)
+			
+			If theObj = 1 Or theObj = 2 Or theObj = 3 Or theObj = 4 Then
+				foundPlayer = True
+			EndIf
+			
 			i=i+1
 		Next
 	Next
+	
+	If Not foundPlayer Then
+		PokeInt(objects, (width+1) * 4, 1)
+		WriteInt(file, 1)
+	EndIf
 	
 	For i = 0 To 19
 		WriteString(file, signText[i])

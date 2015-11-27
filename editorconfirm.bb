@@ -4,6 +4,10 @@ Global confirmMessage$ = ""
 Global confirmed = False
 Global didConfirmRes = False
 
+Function initConfirm()
+
+End Function
+
 Function processInputConfirm()
 	If MouseY() > 200 And MouseY() < 264 Then
 		i = MouseY() - 200
@@ -23,14 +27,14 @@ Function selectConfirm(id)
 		Case 0
 			useRenderState = True
 			selectedConfirm = -1
-			state = prevState
+			changeState(prevState)
 			confirmed = True
 			Delay(100)
 			;useRenderState = False
 		Case 1
 			useRenderState = False
 			selectedConfirm = -1
-			state = prevState
+			changeState(prevState)
 			confirmed = False
 			Delay(100)
 			;useRenderState = False
@@ -73,7 +77,7 @@ Function confirm(msg$)
 	
 	prevState = state
 	
-	state = 2
+	changeState(2)
 	
 	confirmMessage = msg
 	

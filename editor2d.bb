@@ -24,6 +24,8 @@ Global renderState = 0
 Global useRenderState = False
 Global key
 
+changeState(1)
+
 Global running = 1
 
 While running
@@ -41,6 +43,22 @@ While running
 Wend
 
 End
+
+Function changeState(newState)
+	state = newState
+	Select state
+		Case 0
+			initMain()
+		Case 1
+			initMenu()
+		Case 2
+			initConfirm()
+		Case 3
+			initLoad()
+		Case 4
+			initTextEdit()
+	End Select
+End Function
 
 Function processInput()
 	
@@ -112,4 +130,15 @@ Function renderDebug()
 			renderDebugTextEdit()
 	End Select
 	
+End Function
+
+Function debugWrite(msg$, style)
+	Cls
+	If style = 0 Then
+		Text(0, 0, msg)
+	Else
+		renderText(msg, 0, 0)
+	EndIf
+	Flip
+	WaitKey
 End Function
