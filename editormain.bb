@@ -35,6 +35,7 @@ Global tileHighlight = 0
 Global objectHighlight = 0
 
 Global specialUnlocked = False
+Global superUnlock = False
 
 Global selectedID = 0
 
@@ -157,7 +158,7 @@ If MouseHit(1) Then
 		
 		id = sx + sy * 7
 		
-		If id < getCurrentCategoryTileCount() And id >= 0 Then
+		If (id < getCurrentCategoryTileCount() Or superUnlock) And id >= 0 Then
 		
 			selectedID = id
 			selectObjects = False
@@ -522,6 +523,10 @@ If KeyDown(29) And KeyDown(64) Then
 	specialUnlocked = True
 EndIf
 
+If KeyDown(29) And KeyDown(66) And debugMode Then
+	superUnlock = True
+EndIf
+
 End Function
 
 Function renderMain()
@@ -654,21 +659,27 @@ Function renderDebugMain()
 		Text(0, 64, "Special Locked")
 	EndIf
 	
+	If superUnlock Then
+		Text(0, 80, "SuperDBG Unlocked")
+	Else
+		Text(0, 80, "SuperDBG Locked")
+	EndIf
+	
 	catNum$ = (currentTileCategory+1)
 	
 	If currentTileCategory+1 < 10 Then
 		catNum = 0 + catNum
 	EndIf
 	
-	Text(0, 96, "Tile Category: " + catNum + " / " + numTileCategories)
+	Text(0, 112, "Tile Category: " + catNum + " / " + numTileCategories)
 	
-	Text(0, 112, "TileID: " + tileHighlight + ", ObjectID:" + objectHighlight) ;160
+	Text(0, 128, "TileID: " + tileHighlight + ", ObjectID:" + objectHighlight) ;160
 	
 	;renderText("Size: (" + width + ", " + height + ")", 0, 192)
 	
-	Text(0, 128, "Textures: (" + levelTexture + ", " + backgroundTexture + ")") ; 224
+	Text(0, 160, "Textures: (" + levelTexture + ", " + backgroundTexture + ")") ; 224
 	
-	Text(0, 160, "Level ID: " + Str(levelID))
+	Text(0, 176, "Level ID: " + Str(levelID))
 End Function
 
 Function renderArrows()
@@ -1365,7 +1376,7 @@ Function renderTilesPanel()
 			i = 0
 			For y = 0 To 2
 				For x = 0 To 6
-					If i > 17 Then
+					If i > 15 Then
 						Exit
 					EndIf
 					DrawImage(tileGates, x*32+556, y*32+228, i)

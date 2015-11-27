@@ -87,7 +87,7 @@ Function getCategoryTileCount(id)
 		Case 9
 			Return 1
 		Case 10
-			Return 18
+			Return 16
 		Case 11
 			Return 27
 		Case 12
